@@ -33,7 +33,7 @@
 			var myObj;
 			var objRes = JSON.parse('{"respuestas":[]}');
 			//var newStr = "";
-			var url = ""; // Esta URL debería devolver datos JSON
+			var url = "http://127.0.0.1:8000/captchaprot/reto"; // Esta URL debería devolver datos JSON
 			const xhr = new XMLHttpRequest();
 			
 			// Descarga los datos JSON del servidor.
@@ -45,7 +45,9 @@
 				if (http_request.readyState == 4) {
 					if (http_request.status == 200) {
 						var json_data = http_request.responseText; 
-						myObj = JSON.stringify(json_data);
+						myObj = JSON.par(json_data);
+						console.log(json_data)
+						console.log(myObj)
 						crearBoton();
 					} else {
 						alert("Ocurrió un problema con la URL.");
