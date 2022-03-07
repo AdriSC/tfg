@@ -17,9 +17,9 @@
 
 		<h1>Reto</h1>
 
-		<!--<button onclick="mostrarMensaje()">
+		<button onclick="mostrarMensaje()">
 		Empezar
-		</button>-->
+		</button>
 		
 		<p id="pregunta"></p>
 		<p id="output"></p>
@@ -27,13 +27,13 @@
 
 		<script>
 			
-			//var myObj = JSON.parse('{"preguntas":[{"id":123,"q":"What??????"}, {"id":124,"q":"Why??????"}, {"id":125,"q":"Where??????"}]}');
+			var myObj = JSON.parse('{"preguntas":[{"id":123,"q":"What??????"}, {"id":124,"q":"Why??????"}, {"id":125,"q":"Where??????"}]}');
 			var i = 0;
 			var http_request = new XMLHttpRequest();
-			var myObj;
+			var the_object;
 			var objRes = JSON.parse('{"respuestas":[]}');
 			//var newStr = "";
-			var url = "http://127.0.0.1:8000/captchaprot/reto"; // Esta URL debería devolver datos JSON
+			var url = ""; // Esta URL debería devolver datos JSON
 			const xhr = new XMLHttpRequest();
 			
 			// Descarga los datos JSON del servidor.
@@ -45,10 +45,11 @@
 				if (http_request.readyState == 4) {
 					if (http_request.status == 200) {
 						var json_data = http_request.responseText; 
-						myObj = JSON.parse(json_data);
-						console.log(json_data)
-						console.log(myObj)
-						crearBoton();
+						//the_object = JSON.stringify(json_data);
+						
+						jQuery.each(the_object, crearBoton());
+						
+
 					} else {
 						alert("Ocurrió un problema con la URL.");
 					}
@@ -57,13 +58,6 @@
 			}
 
 			function crearBoton(){
-				var empezar = document.createElement("BUTTON");
-				var t = document.createTextNode("Empezar");
-				empezar.appendChild(t);
-				document.body.appendChild(empezar);
-				empezar.addEventListener("click", () => {
-					mostrarMensaje();
-				});
 			}
 
 			function mostrarMensaje() {
@@ -114,11 +108,13 @@
 
 			function nextItem() {
 				i = i + 1; // increase i by one
+				
 				return myObj.preguntas[i].q; // give us back the item of where we are now
 			}
 
 			function enviarResultado(){
 				document.getElementById("pregunta").textContent = "Reto terminado";
+				
 				xhr.onreadystatechange = mostrar_exito;
 				xhr.open("POST", url, true);
 				xhr.setRequestHeader('Content-Type', 'application/json');
@@ -161,4 +157,3 @@
 </body>
 
 </html>
-
