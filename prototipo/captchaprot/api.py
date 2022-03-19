@@ -10,7 +10,7 @@ from .models import Challenges
 def reto(request):
     
     #qText = 'SELECT id, text, option1, option2, option3 FROM captchaprot_challengues'
-    query = Challenges.objects.raw('SELECT id, text, option1, option2, option3 FROM captchaprot_challengues')
+    query = Challenges.objects.raw('SELECT id, text, option1, option2, option3 FROM captchaprot_challenges')
     
     result_list = []
 
@@ -19,17 +19,26 @@ def reto(request):
 
     question_dict = {}
     challenges_list = []
-    for i in range(3):
-        aux_dict = {}
-        option_list = []
-        challenge = result_list[randint(0, len(result_list))]
-        aux_dict['id'] = challenge.id
-        aux_dict['text'] = challenge.text
-        option_list.append(challenge.option1)
-        option_list.append(challenge.option2)
-        option_list.append(challenge.option3)
-        aux_dict['options'] = option_list
-        challenges_list.append(aux_dict)
+    numRetos = 0
+    while numRetos != 3:
+        randNum = randint(0, len(result_list) - 1)
+        print("size " + str(len(result_list)))
+        print("random " + str(randNum))
+        if result_list[randNum] != 'null':
+            aux_dict = {}
+            option_list = []
+            
+            
+            challenge = result_list[randNum]
+            result_list[randNum] = 'null'
+            aux_dict['id'] = challenge.id
+            aux_dict['text'] = challenge.text
+            option_list.append(challenge.option1)
+            option_list.append(challenge.option2)
+            option_list.append(challenge.option3)
+            aux_dict['options'] = option_list
+            challenges_list.append(aux_dict)
+            numRetos += 1
     
     #res_dict = {}
     #res_dict['challengues'] = challenges_list
