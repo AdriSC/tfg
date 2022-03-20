@@ -42,3 +42,21 @@ class Challenges(models.Model):
         if ratio >= 80:
             setattr(self, 'choice', opcion)
             setattr(self, 'choiceRatio', ratio)
+            self.save()
+
+    def compruebaYActualiza(self, op):
+        resultado = False
+        
+        if self.choice == 'ND' or op == self.choice:
+            resultado = True
+
+        if op == self.option1:
+            setattr(self, 'rate1', self.rate1 + 1)
+        elif request.POST['opcion'] == q.option2:
+            setattr(self, 'rate2', self.rate2 + 1)
+        elif request.POST['opcion'] == q.option3:
+            setattr(self, 'rate3', self.rate3 + 1)
+
+        self.save()
+
+        return resultado
