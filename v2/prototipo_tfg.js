@@ -57,13 +57,13 @@
 			
 				output.innerHTML = myObj.challenges[i].text;	
 				
-				for(var j = 0; j < myObj.challenges.length; j++){
+				for(var j = 0; j < myObj.challenges[i].options.length; j++){
 					var varName = "res" + (j + 1);
 					var op1 = document.createElement("INPUT");
 					op1.setAttribute("type", "radio");
 					op1.setAttribute("id", varName);
 					op1.setAttribute("name", "opcion");
-					op1.setAttribute("value", j);
+					op1.setAttribute("value", myObj.challenges[i].options[j]);
 					ops.appendChild(op1);
 					document.getElementById(varName).after(myObj.challenges[i].options[j]);
 				}
@@ -101,7 +101,6 @@
 					if(i < myObj.challenges.length - 1){ 
 						procesarResultado();
 						output.innerHTML = nextItem();
-						
 					}
 					else{
 						siguiente.style.display = "none";
@@ -144,6 +143,7 @@
 				//formData.append("respuestas", );
 				xhr.onreadystatechange = mostrar_exito;
 				xhr.open("POST", url1, true);
+				xhr.setRequestHeader("Accept", "application/json");
 				xhr.setRequestHeader('Content-Type', 'application/json');
 				xhr.send(JSON.stringify(objRes));
 				//document.getElementById("resultado").innerHTML = JSON.stringify(objRes);
@@ -155,10 +155,11 @@
 				for (const radioButton of radioButtons) {
 					if (radioButton.checked) {
 						selectedSize = radioButton.value;
+						console.log(radioButton.value)
 						break;
 					}
 				}
-				var newStr = '{"id":' + myObj.challenges[i].id + ',"a":' + selectedSize + "}";
+				var newStr = JSON.stringify('{"id":' + myObj.challenges[i].id + ',"a":"' + selectedSize + '"}');
 				objRes.respuestas[i] = JSON.parse(newStr);
 			}
 	
