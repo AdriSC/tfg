@@ -13,9 +13,19 @@
 			const div = document.getElementById("div_principal");
 			       
 			// Descarga los datos JSON del servidor.
-			http_request.onreadystatechange = handle_json;
-			http_request.open("GET", url, true);
-			http_request.send();
+			//http_request.onreadystatechange = handle_json;
+			//http_request.open("GET", url, true);
+			//http_request.send();
+
+			requisitos = {
+				palabras_clave: "pablo iglesias,real madrid",
+				palabras_restringidas: "monasterio",
+				num_retos: 5
+			}
+			http_request.open("POST", url, true);
+			http_request.setRequestHeader("Accept", "application/json");
+			http_request.setRequestHeader('Content-Type', 'application/json');
+			http_request.send(JSON.stringify(requisitos));
 			
 			var retoh1 = document.createElement("h1");
 			retoh1.innerHTML = "Reto";
