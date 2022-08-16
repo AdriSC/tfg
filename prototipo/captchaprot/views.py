@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 
 from django.conf import settings
 from django.http import HttpResponse, Http404
@@ -16,6 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 import string
 import csv
 import os
+import json
 
 def generar_clave():
     clave = ''
@@ -116,6 +118,54 @@ def cargar_retos_bbdd():
                 return False
     return True
 
+def ver_colecciones(request):
+    colecciones_qs = Coleccion.objects.all()
+    lista_cols = []
+    for col_r in colecciones_qs:
+        col_dict = {
+            'id_coleccion': col_r.id,
+            'nombre': col_r.nombre,
+            'descripcion': col_r.descripcion,
+            'palabras_clave': col_r.palabras_clave
+        }
+        lista_cols.append(col_dict)
+    
+    json_res = json.dumps({'colecciones':lista_cols})
+    return HttpResponse(json_res)
+
+def ver_retos_coleccion(request):
+    id_col = request.GET['id_coleccion']
+    criterio = Q(eleccion = 'null')
+
+    retos_etiquetados_qs= Reto.objects.filter(coleccion = id_col).filter(~criterio).order_by('-cuenta_respuestas')
+    retos_sin_etiquetar_qs = Reto.objects.filter(coleccion = id_col).filter(criterio)
+
+    lista_r_et = []
+    for r_et in retos_etiquetados_qs:
+        r_dict = {
+            'texto': r_et.texto,
+            'eleccion': r_et.eleccion,
+            'fiabilidad': str(r_et.fiabilidad_opcion)
+        }
+        lista_r_et.append(r_dict)
+
+    lista_r_sin_et = []
+    for r_sin_et in retos_sin_etiquetar_qs:
+        r_dict = {
+            'texto': r_sin_et.texto,
+            'eleccion': r_sin_et.eleccion,
+            'fiabilidad': str(r_sin_et.fiabilidad_opcion)
+        }
+        lista_r_sin_et.append(r_dict)
+    
+    json_res = json.dumps({
+        'retos_etiquetados': lista_r_et,
+        'retos_sin_etiquetar': lista_r_sin_et
+    })    
+
+    return HttpResponse(json_res)
+
+
 @csrf_exempt
 def subir_retos(request):
     if request.method == 'POST':
@@ -127,9 +177,6 @@ def subir_retos(request):
             return HttpResponse('ok')
         else:
             return HttpResponse('no ok')
-
-
-
 
 def descargar_csv(request):
 
