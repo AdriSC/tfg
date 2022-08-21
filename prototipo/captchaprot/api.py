@@ -138,7 +138,7 @@ def comprobacion(request):
     aciertos = [0,0]
     comprobaciones = {}
     for respuesta in respuestas:
-        r = json.loads(respuesta)
+        r = respuesta
         reto_query = Reto.objects.get(id = r['id'])
         opcion_query = Opciones_reto.objects.get(reto = r['id'], opcion = r['a'])
         opcion_query.actualiza_cuenta()

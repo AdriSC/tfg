@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">-->
+    <title>Menú principal</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body class="p-3 m-0 border-0 bd-example bd-example-row">
+    <!-- Full screen modal -->
+    
+    <!-- Example Code -->
+    {% load widget_tweaks %}
+    <style>
+      .btn-sm {
+        border-color: white !important;
+      }
+      
+    </style>
+    <div class="container text-center d-grid gap-3">
+      <div class="row">
+        <h1>Hola, {{username}}</h1>
+      </div>
+      <div class="row" id="apiKeyRow">
+        <button id="apiKeyBtn" type="button" class="btn col-3 btn-outline-secondary">Ver API key</button>
+        <p class="col-6" id="keyOutput" style="visibility: hidden;">{{clave}}</p>
+        <button id="renovarBtn" type="button" class="btn col-3 btn-info btn-sm" style="visibility: hidden;">Renovar</button>
+      </div>
+      <!--<div id="este_div">
+      </div>-->
+      <div class="row">
+        <h3>Colecciones</h3>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Id</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Palabras clave</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo">
+          </tbody>
+        </table>
+      </div>
+      
+<!--     <div id="ventana_dialogo" class="modal" role="dialog">
+        <div class="modal-fullscreen fade" >
+          <div>
+            <h3>Retos etiquetados</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Texto</th>
+                  <th scope="col">Elección</th>
+                  <th scope="col">Fiabilidad</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo_si">
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h3>Retos sin etiquetar</h3>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Texto</th>
+                  <th scope="col">Fiabilidad</th>
+                </tr>
+              </thead>
+              <tbody id="cuerpo_no">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    -->
+      <div id="ventana_dialogo" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <h3>Retos etiquetados</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Texto</th>
+                      <th scope="col">Elección</th>
+                      <th scope="col">Fiabilidad</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cuerpo_si">
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <h3>Retos sin etiquetar</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Texto</th>
+                      <th scope="col">Fiabilidad</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cuerpo_no">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <!--<div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>-->
+          </div>
+        </div>
+      </div>
+
+      <!--<div class="row gap-1">
+
+      </div>-->
+    </div>
+    <!-- End Example Code -->
+  
+    <script>
+
+      document.getElementById("apiKeyBtn").addEventListener("click", function() {
+        if (document.getElementById("keyOutput").style.visibility == "hidden") {
+          document.getElementById("keyOutput").style.visibility = "visible";
+          document.getElementById("apiKeyBtn").innerText = "Ocultar API key";
+          document.getElementById("renovarBtn").style.visibility = "visible";
+        }
+        else {
+          document.getElementById("keyOutput").style.visibility = "hidden";
+          document.getElementById("apiKeyBtn").innerText = "Ver API key";
+          document.getElementById("renovarBtn").style.visibility = "hidden";
+        }
+      });
+
+      document.getElementById("renovarBtn").addEventListener("click", function() {
+        window.location.href = "http://127.0.0.1:8000/captchaprot/renovar_clave";
+        alert("API Key renovada.");
+      });
+
+    </script>
+    {% load static %}
+    
+    <script src="{% static 'menu_usuario.js' %}"></script>
+    
+  </body>
+</html>

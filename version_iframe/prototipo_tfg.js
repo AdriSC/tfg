@@ -1,5 +1,3 @@
-
-
 //var myOb = JSON.parse('{"challenges": [{"id": 8, "text": "ejemplo challenge 8", "options": ["opcion1", "opcion2", "opcion3"]}, {"id": 4, "text": "ejemplo challenge 4", "options": ["opcion1", "opcion2", "opcion3"]}, {"id": 3, "text": "ejemplo challenge 3", "options": ["opcion1", "opcion2", "opcion3"]}]}');
 var i = 0;
 var http_request = new XMLHttpRequest();
@@ -12,14 +10,25 @@ var xhr = new XMLHttpRequest();
 var empezar, siguiente, enviar;
 const div = document.getElementById("div_principal");
 var button_group;
-			       
+
 // Descarga los datos JSON del servidor.
-http_request.onreadystatechange = handle_json;
+/*
 http_request.open("GET", url, true);
-http_request.send();
+http_request.send();*/
+http_request.onreadystatechange = handle_json;
+requisitos = {
+	palabras_clave: "pablo iglesias,real madrid",
+	palabras_restringidas: "monasterio",
+	num_retos: 5
+}
+
+http_request.open("POST", url, true);
+http_request.setRequestHeader("Accept", "application/json");
+http_request.setRequestHeader('Content-Type', 'application/json');
+http_request.send(JSON.stringify(requisitos));
 
 var retoh1 = document.createElement("h1");
-retoh1.style.fontFamily = '"Comic Sans MS", "Comic Sans", cursive';
+//retoh1.style.fontFamily = '"Comic Sans MS", "Comic Sans", cursive';
 retoh1.style.fontFamily = "'Product Sans', sans-serif";
 retoh1.innerHTML = "¿Eres un robot?";
 div.appendChild(retoh1);
@@ -35,13 +44,13 @@ var ops = document.createElement("div");
 div.setAttribute("id", "este_div")
 div.appendChild(ops);
 
-function crearBoton(){	
+function crearBoton(){
 	empezar = document.createElement("BUTTON");
 	var t = document.createTextNode("No");
 	empezar.appendChild(t);
 	//div.appendChild(empezar);
 	div.appendChild(empezar);
-	empezar.addEventListener("click", () => {	
+	empezar.addEventListener("click", () => {
 		mostrarMensaje();
 	});
 }
@@ -49,7 +58,7 @@ function crearBoton(){
 function handle_json() {
 	if (http_request.readyState == 4) {
 		if (http_request.status == 200) {
-			var json_data = http_request.responseText; 
+			var json_data = http_request.responseText;
 			myObj = JSON.parse(json_data)
 			crearBoton();
 		} else {
@@ -65,7 +74,7 @@ function mostrarMensaje() {
 	empezar.style.display = "none";
 
 	output.style.fontSize = '18px';
-	output.innerHTML = myObj.challenges[i].text;	
+	output.innerHTML = myObj.challenges[i].text;
 
 	//button_group.setAttribute("class", "btn-group");
 
@@ -86,7 +95,7 @@ function mostrarMensaje() {
 		console.log(varName);
 		//const node = document.createTextNode(myObj.challenges[i].options[j]);
 		document.getElementById(varName).after(myObj.challenges[i].options[j]);
-		
+
 		var varName = "res" + (j + 1);*/
 		var op1 = document.createElement("BUTTON");
 		var t = document.createTextNode(myObj.challenges[i].options[j]);
@@ -96,7 +105,7 @@ function mostrarMensaje() {
 		//op1.setAttribute("value", );
 		op1.setAttribute("value", j);
 		op1.addEventListener("click", function() {
-			if(i < myObj.challenges.length - 1){ 
+			if(i < myObj.challenges.length - 1){
 				procesarResultado(j);
 				output.innerHTML = nextItem();
 				mostrarMensaje();
@@ -132,7 +141,7 @@ function mostrarMensaje() {
 	//div.appendChild(siguiente);
 
 	/*siguiente.addEventListener("click", () => {
-		
+
 	});*/
 }
 
@@ -146,13 +155,13 @@ function nextItem() {
 function mostrar_exito(){
 	if (xhr.readyState == 4) {
 		if (xhr.status == 200) {
-			output.innerHTML = xhr.responseText; 
+			output.innerHTML = xhr.responseText;
 		} else {
 				alert("Ocurrió un problema con la URL.");
 		}
 		xhr = null;
 	}
-	enviar.style.display = "none";
+	//enviar.style.display = "none";
 }
 
 function enviarResultado(){
@@ -162,7 +171,10 @@ function enviarResultado(){
 	xhr.onreadystatechange = mostrar_exito;
 	xhr.open("POST", url1, true);
 	xhr.setRequestHeader('Content-Type', 'application/json');
+	//xhr.setRequestHeader('Content-Type', 'text/plain');
 	xhr.send(JSON.stringify(objRes));
+	//xhr.send(objRes);
+	console.log(JSON.stringify(objRes));
 	//document.getElementById("resultado").innerHTML = JSON.stringify(objRes);
 }
 
@@ -180,4 +192,4 @@ function procesarResultado(j){
 	console.log(newStr);
 	objRes.respuestas.push(JSON.parse(newStr));
 }
-			
+

@@ -4,6 +4,7 @@ from django.template import loader
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
+from django.shortcuts import render
 
 from django.conf import settings
 from django.http import HttpResponse, Http404
@@ -73,7 +74,8 @@ def ventana_usuario(request):
 
     if '_auth_user_id' in request.session:
         clave_usuario = Clave_usuario.objects.get(usuario=request.session['_auth_user_id'])
-        return HttpResponse("Tu clave de usuario: " + clave_usuario.clave)
+        return render(request, 'menu_usuario.html', {'clave': clave_usuario.clave, 'username': request.user.username})
+        #return HttpResponse("Tu clave de usuario: " + clave_usuario.clave)
     else:
         return HttpResponseRedirect('acceso')
 
@@ -85,8 +87,11 @@ def renovar_clave(request):
 
 def leer_documento_cargado(archivo):
     with open('archivos/carga.txt', mode='wb+') as carga_doc:
-        for c in archivo.chunks():
+        #for c in archivo.chunks():
+        for c in archivo:
             carga_doc.write(c)
+        print(carga_doc)
+   
 
 def comprobar_datos(fila, opciones):
     if len(fila) != 3 or len(opciones) < 2:
@@ -168,9 +173,14 @@ def ver_retos_coleccion(request):
 
 @csrf_exempt
 def subir_retos(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and 'archivocarga' in request.FILES:
         print(request.FILES)
-        leer_documento_cargado(request.FILES['archivocarga'])
+        #print(request.POST['archivocarga'])
+        doc = request.FILES
+        print(doc)
+        #leer_documento_cargado(request.POST['archivocarga'])
+        #leer_documento_cargado(request.FILES['archivocarga'])
+        leer_documento_cargado(doc['archivocarga'])
         if cargar_retos_bbdd():
             if os.path.exists("archivos/carga.txt"):
                 os.remove("archivos/carga.txt")

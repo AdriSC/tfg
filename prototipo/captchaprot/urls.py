@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf.urls.static import static
 
 
-from . import views, api
+from . import views, api, admin
 
 urlpatterns = [
     path('reto', api.reto, name='reto'),
@@ -18,5 +18,6 @@ urlpatterns = [
     path('ver_colecciones', views.ver_colecciones, name='ver_colecciones'),
     path('ver_retos_coleccion', views.ver_retos_coleccion, name='ver_retos_coleccion'),
     path('subir_retos', views.subir_retos, name='subir_retos'),
-    path('descargar_csv', views.descargar_csv, name='descargar_csv')
+    path('descargar_csv', views.descargar_csv, name='descargar_csv'),
+    path('upload-csv', admin.ColeccionAdmin.upload_csv, name="upload-csv"),
 ] #+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
