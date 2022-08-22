@@ -1,12 +1,10 @@
 {% extends "admin/base.html" %}
-
 {% block content %}
-
-<form action="http://127.0.0.1:8000/captchaprot/subir_retos" enctype="multipart/form-data" method="post">
+<form action="upload-csv" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
     <input type="file" id="archivocarga" name="archivocarga">
     <input type="submit">
 </form>
-
 {{block.super}}
 {% endblock %}
     

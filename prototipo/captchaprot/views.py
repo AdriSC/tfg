@@ -213,7 +213,5 @@ def descargar_csv(request):
     doc_wr.writerows(filas)
 
     return csv_res
-
-    
     
 
