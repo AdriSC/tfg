@@ -190,25 +190,29 @@ def subir_retos(request):
 
 def descargar_csv(request):
 
-    csv_res = HttpResponse(
-        content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="datos_etiquetados.csv"'},
-    )
+    id_col = request.GET['id_coleccion']
+    coleccion_qs = Coleccion.objects.get(id = id_col)
+    textos_qs= Reto.objects.filter(coleccion = id_col)
 
     cabecera = ['Texto', 'Opción elegida', 'Aceptacion']
-
-    textos = Reto.objects.raw('SELECT id, texto, eleccion, fiabilidad_opcion FROM captchaprot_reto')
-
+    
+    info_coleccion = [coleccion_qs.nombre, coleccion_qs.descripcion]
     filas = []
    
-    for t in textos:
+    for t in textos_qs:
         fila = []
         fila.append(t.texto)
         fila.append(t.eleccion)
         fila.append(t.fiabilidad_opcion)
         filas.append(fila)
     
+    csv_res = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="{}.csv"'.format(coleccion_qs.nombre)},
+    )
+
     doc_wr = csv.writer(csv_res)
+    doc_wr.writerow(info_coleccion)
     doc_wr.writerow(cabecera)
     doc_wr.writerows(filas)
 

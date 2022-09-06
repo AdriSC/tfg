@@ -23,6 +23,7 @@ function dibujarTablaColecciones(datos) {
 		var id = document.createElement("th");
 		var pClave = document.createElement("td");
 		var ver = document.createElement("td");
+		var descargar = document.createElement("td");
 
 		id.setAttribute("scope", "row");
 
@@ -64,11 +65,22 @@ function dibujarTablaColecciones(datos) {
 
 		ver.appendChild(verBtn);
 
+		var descargarBtn = document.createElement("BUTTON");
+		descargarBtn.setAttribute("class", "btn btn-danger");
+		descargarBtn.addEventListener("click", function() {
+			var id = datos.colecciones[i].id_coleccion.toString();
+			var url = "http://127.0.0.1:8000/captchaprot/descargar_csv?id_coleccion=" + id;
+			location = url;
+		});
+		descargarBtn.appendChild(document.createTextNode("Descargar"));
+		descargar.appendChild(descargarBtn);
+
 		fila.appendChild(id);
 		fila.appendChild(nombre);
 		fila.appendChild(desc);
 		fila.appendChild(pClave); 
 		fila.appendChild(ver);
+		fila.appendChild(descargar);
 
 		tbody.appendChild(fila);
 	}
