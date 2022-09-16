@@ -19,7 +19,7 @@ http_request.onreadystatechange = handle_json;
 requisitos = {
 	palabras_clave: "pablo iglesias,real madrid",
 	palabras_restringidas: "monasterio",
-	num_retos: 5
+	num_textos: 5
 }
 
 http_request.open("POST", url, true);
@@ -74,11 +74,11 @@ function mostrarMensaje() {
 	empezar.style.display = "none";
 
 	output.style.fontSize = '18px';
-	output.innerHTML = myObj.challenges[i].text;
+	output.innerHTML = myObj.reto[i].text;
 
 	//button_group.setAttribute("class", "btn-group");
 
-	for(var j = 0; j < myObj.challenges[i].options.length; j++) {
+	for(var j = 0; j < myObj.reto[i].options.length; j++) {
 		if(button_group === undefined) {
 			button_group = document.createElement("div");
 			button_group.setAttribute("class", "btn-group");
@@ -98,14 +98,14 @@ function mostrarMensaje() {
 
 		var varName = "res" + (j + 1);*/
 		var op1 = document.createElement("BUTTON");
-		var t = document.createTextNode(myObj.challenges[i].options[j]);
+		var t = document.createTextNode(myObj.reto[i].options[j]);
 		op1.appendChild(t);
 		//op1.setAttribute("id", varName);
 		op1.setAttribute("name", "opcion");
 		//op1.setAttribute("value", );
 		op1.setAttribute("value", j);
 		op1.addEventListener("click", function() {
-			if(i < myObj.challenges.length - 1){
+			if(i < myObj.reto.length - 1){
 				procesarResultado(j);
 				output.innerHTML = nextItem();
 				mostrarMensaje();
@@ -149,7 +149,7 @@ function nextItem() {
 	i = i + 1; // increase i by one
 	button_group.style.display = "none";
 	button_group = undefined;
-	return myObj.challenges[i].text; // give us back the item of where we are now
+	return myObj.reto[i].text; // give us back the item of where we are now
 }
 
 function mostrar_exito(){
@@ -188,7 +188,7 @@ function procesarResultado(j){
 		}
 	}*/
 	console.log(j);
-	var newStr = '{"id":' + myObj.challenges[i].id + ',"a":' + j.toString() + "}";
+	var newStr = '{"id":' + myObj.reto[i].id + ',"respuesta":' + j.toString() + "}";
 	console.log(newStr);
 	objRes.respuestas.push(JSON.parse(newStr));
 }

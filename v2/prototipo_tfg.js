@@ -20,7 +20,7 @@
 			requisitos = {
 				palabras_clave: "pablo iglesias,real madrid",
 				palabras_restringidas: "monasterio",
-				num_retos: 5
+				num_textos: 5
 			}
 			http_request.open("POST", url, true);
 			http_request.setRequestHeader("Accept", "application/json");
@@ -65,17 +65,17 @@
 
 				empezar.style.display = "none";
 			
-				output.innerHTML = myObj.challenges[i].text;	
+				output.innerHTML = myObj.reto[i].text;	
 				
-				for(var j = 0; j < myObj.challenges[i].options.length; j++){
+				for(var j = 0; j < myObj.reto[i].options.length; j++){
 					var varName = "res" + (j + 1);
 					var op1 = document.createElement("INPUT");
 					op1.setAttribute("type", "radio");
 					op1.setAttribute("id", varName);
 					op1.setAttribute("name", "opcion");
-					op1.setAttribute("value", myObj.challenges[i].options[j]);
+					op1.setAttribute("value", myObj.reto[i].options[j]);
 					ops.appendChild(op1);
-					document.getElementById(varName).after(myObj.challenges[i].options[j]);
+					document.getElementById(varName).after(myObj.reto[i].options[j]);
 				}
 
 				/*var op1 = document.createElement("INPUT");
@@ -108,7 +108,7 @@
 				div.appendChild(siguiente);
 
 				siguiente.addEventListener("click", () => {
-					if(i < myObj.challenges.length - 1){ 
+					if(i < myObj.reto.length - 1){ 
 						procesarResultado();
 						output.innerHTML = nextItem();
 					}
@@ -133,7 +133,7 @@
 
 			function nextItem() {
 				i = i + 1; // increase i by one
-				return myObj.challenges[i].text; // give us back the item of where we are now
+				return myObj.reto[i].text; // give us back the item of where we are now
 			}
 
 			function mostrar_exito(){
@@ -169,7 +169,7 @@
 						break;
 					}
 				}
-				var newStr = JSON.stringify('{"id":' + myObj.challenges[i].id + ',"a":"' + selectedSize + '"}');
+				var newStr = JSON.stringify('{"id":' + myObj.reto[i].id + ',"respuesta":"' + selectedSize + '"}');
 				objRes.respuestas[i] = JSON.parse(newStr);
 			}
 	

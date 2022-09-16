@@ -11,7 +11,7 @@ class Coleccion(models.Model):
     def __str__(self):
         return self.nombre
         
-class Reto(models.Model):
+class Textos(models.Model):
     id = models.BigAutoField(primary_key=True, auto_created=True)
     texto = models.CharField(max_length=300)
     coleccion = models.ForeignKey(Coleccion, on_delete=models.CASCADE)
@@ -27,7 +27,7 @@ class Reto(models.Model):
         return self.eleccion == 'null' or opcion == self.eleccion
                       
     def actualiza_eleccion(self):
-        opciones = Opciones_reto.objects.filter(reto = self.id)
+        opciones = Opciones_texto.objects.filter(texto = self.id)
         setattr(self, 'cuenta_respuestas', self.cuenta_respuestas + 1)
         
         for op in opciones:
@@ -38,13 +38,13 @@ class Reto(models.Model):
                 
         self.save()
         
-class Opciones_reto(models.Model):
-    reto = models.ForeignKey(Reto, on_delete=models.CASCADE)
+class Opciones_texto(models.Model):
+    texto = models.ForeignKey(Textos, on_delete=models.CASCADE)
     opcion = models.CharField(max_length=20)
     cuenta = models.BigIntegerField(default=0)
     
     class Meta:
-        unique_together = ['reto', 'opcion']
+        unique_together = ['texto', 'opcion']
 
     def __str__(self):
         return self.opcion

@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse, Http404
 
-from .models import Clave_usuario, Coleccion, Opciones_reto, Reto
+from .models import Clave_usuario, Coleccion, Opciones_texto, Textos
 from .forms import Form_registro, Form_login
 from random import randint
 
@@ -27,7 +27,8 @@ def generar_clave():
         clave += string.ascii_letters[rand_num]
     return clave
 
-#def index(request):
+def index(request):
+    return HttpResponseRedirect('acceso')
     
 def registro(request):
     if request.method == 'POST':
@@ -61,8 +62,10 @@ def iniciar_sesion(request):
     user=authenticate(username=request.POST['nombre_usuario'], password=request.POST['contrasena'])
     if user is not None:
         login(request, user)
-        
-        return HttpResponseRedirect('ventana_usuario')
+        if user.is_superuser:
+            return HttpResponseRedirect('../admin')
+        else:
+            return HttpResponseRedirect('ventana_usuario')
     else:
         return HttpResponse('no existe usuario')
 
@@ -87,19 +90,17 @@ def renovar_clave(request):
 
 def leer_documento_cargado(archivo):
     with open('archivos/carga.txt', mode='wb+') as carga_doc:
-        #for c in archivo.chunks():
         for c in archivo:
             carga_doc.write(c)
         print(carga_doc)
    
-
 def comprobar_datos(fila, opciones):
     if len(fila) != 3 or len(opciones) < 2:
         return False
     else:
         return True
 
-def cargar_retos_bbdd():
+def cargar_textos_bbdd():
     with open('archivos/carga.txt') as doc_carga:
         doc_rd = csv.reader(doc_carga)
         cabecera = next(doc_rd)
@@ -111,13 +112,13 @@ def cargar_retos_bbdd():
             opciones = fila[1].strip('[]').split(';')
             if comprobar_datos(fila, opciones):
                 try:
-                    r = Reto(texto=fila[0], coleccion=c, umbral_eleccion = float(fila[2]))
+                    r = Textos(texto=fila[0], coleccion=c, umbral_eleccion = float(fila[2]))
                     r.save()
                 except ValueError:
                     return False
                 
                 for op in opciones:
-                    o = Opciones_reto(reto=r, opcion=op)
+                    o = Opciones_texto(reto=r, opcion=op)
                     o.save()
             else: 
                 return False
@@ -138,50 +139,44 @@ def ver_colecciones(request):
     json_res = json.dumps({'colecciones':lista_cols})
     return HttpResponse(json_res)
 
-def ver_retos_coleccion(request):
+def ver_textos_coleccion(request):
     id_col = request.GET['id_coleccion']
     criterio = Q(eleccion = 'null')
 
-    retos_etiquetados_qs= Reto.objects.filter(coleccion = id_col).filter(~criterio).order_by('-cuenta_respuestas')
-    retos_sin_etiquetar_qs = Reto.objects.filter(coleccion = id_col).filter(criterio)
+    textos_etiquetados_qs= Textos.objects.filter(coleccion = id_col).filter(~criterio).order_by('-cuenta_respuestas')
+    textos_sin_etiquetar_qs = Textos.objects.filter(coleccion = id_col).filter(criterio)
 
-    lista_r_et = []
-    for r_et in retos_etiquetados_qs:
-        r_dict = {
-            'texto': r_et.texto,
-            'eleccion': r_et.eleccion,
-            'fiabilidad': str(r_et.fiabilidad_opcion)
+    lista_t_et = []
+    for t_et in textos_etiquetados_qs:
+        t_dict = {
+            'texto': t_et.texto,
+            'eleccion': t_et.eleccion,
+            'fiabilidad': str(t_et.fiabilidad_opcion)
         }
-        lista_r_et.append(r_dict)
+        lista_t_et.append(t_dict)
 
-    lista_r_sin_et = []
-    for r_sin_et in retos_sin_etiquetar_qs:
-        r_dict = {
-            'texto': r_sin_et.texto,
-            'eleccion': r_sin_et.eleccion,
-            'fiabilidad': str(r_sin_et.fiabilidad_opcion)
+    lista_t_sin_et = []
+    for t_sin_et in textos_sin_etiquetar_qs:
+        t_dict = {
+            'texto': t_sin_et.texto,
+            'eleccion': t_sin_et.eleccion,
+            'fiabilidad': str(t_sin_et.fiabilidad_opcion)
         }
-        lista_r_sin_et.append(r_dict)
+        lista_t_sin_et.append(t_dict)
     
     json_res = json.dumps({
-        'retos_etiquetados': lista_r_et,
-        'retos_sin_etiquetar': lista_r_sin_et
+        'textos_etiquetados': lista_t_et,
+        'textos_sin_etiquetar': lista_t_sin_et
     })    
 
     return HttpResponse(json_res)
 
-
 @csrf_exempt
-def subir_retos(request):
+def subir_textos(request):
     if request.method == 'POST' and 'archivocarga' in request.FILES:
-        print(request.FILES)
-        #print(request.POST['archivocarga'])
         doc = request.FILES
-        print(doc)
-        #leer_documento_cargado(request.POST['archivocarga'])
-        #leer_documento_cargado(request.FILES['archivocarga'])
         leer_documento_cargado(doc['archivocarga'])
-        if cargar_retos_bbdd():
+        if cargar_textos_bbdd():
             if os.path.exists("archivos/carga.txt"):
                 os.remove("archivos/carga.txt")
             return HttpResponse('ok')
@@ -192,7 +187,7 @@ def descargar_csv(request):
 
     id_col = request.GET['id_coleccion']
     coleccion_qs = Coleccion.objects.get(id = id_col)
-    textos_qs= Reto.objects.filter(coleccion = id_col)
+    textos_qs= Textos.objects.filter(coleccion = id_col)
 
     cabecera = ['Texto', 'Opción elegida', 'Aceptacion']
     

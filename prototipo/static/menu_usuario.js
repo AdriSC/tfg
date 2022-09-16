@@ -46,7 +46,7 @@ function dibujarTablaColecciones(datos) {
 		verBtn.addEventListener("click", function() {
 			var http_request = new XMLHttpRequest();
 			var id = datos.colecciones[i].id_coleccion.toString();
-			var url = "http://127.0.0.1:8000/captchaprot/ver_retos_coleccion?id_coleccion=" + id;
+			var url = "http://127.0.0.1:8000/captchaprot/ver_textos_coleccion?id_coleccion=" + id;
 			http_request.open("GET", url, true);
 			http_request.send();
 			http_request.onreadystatechange = function() {
@@ -92,15 +92,15 @@ function dialogoColeccion(retos, id) {
 	document.getElementsByClassName("modal-title")[0].innerText = "Colección #" + id;
 	
 	var tbodySi = document.getElementById("cuerpo_si");
-	for(let i = 0; i < retos.retos_etiquetados.length; i++) {
+	for(let i = 0; i < retos.textos_etiquetados.length; i++) {
 		var fila = document.createElement("tr");
 		var texto = document.createElement("td");
 		var eleccion = document.createElement("td");
 		var fiabilidad = document.createElement("td");
 
-		texto.innerHTML = retos.retos_etiquetados[i].texto;
-		eleccion.innerHTML = retos.retos_etiquetados[i].eleccion;
-		fiabilidad.innerHTML = retos.retos_etiquetados[i].fiabilidad;
+		texto.innerHTML = retos.textos_etiquetados[i].texto;
+		eleccion.innerHTML = retos.textos_etiquetados[i].eleccion;
+		fiabilidad.innerHTML = retos.textos_etiquetados[i].fiabilidad;
 
 		fila.appendChild(texto);
 		fila.appendChild(eleccion);
@@ -109,13 +109,13 @@ function dialogoColeccion(retos, id) {
 	}
 
 	var tbodySi = document.getElementById("cuerpo_no");
-	for(let i = 0; i < retos.retos_etiquetados.length; i++) {
+	for(let i = 0; i < retos.textos_etiquetados.length; i++) {
 		var fila = document.createElement("tr");
 		var texto = document.createElement("td");
 		var fiabilidad = document.createElement("td");
 
-		texto.innerHTML = retos.retos_sin_etiquetar[i].texto;
-		fiabilidad.innerHTML = retos.retos_sin_etiquetar[i].fiabilidad;
+		texto.innerHTML = retos.textos_sin_etiquetar[i].texto;
+		fiabilidad.innerHTML = retos.textos_sin_etiquetar[i].fiabilidad;
 
 		fila.appendChild(texto);
 		fila.appendChild(fiabilidad);
