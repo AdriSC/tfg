@@ -92,12 +92,12 @@ function mostrarMensaje() {
 		op1.setAttribute("name", "opcion");
 		op1.addEventListener("click", function() {
 			if(i < myObj.reto.length - 1){
-				procesarResultado(j);
+				procesarResultado(myObj.reto[i].options[j-1]);
 				output.innerHTML = nextItem();
 				mostrarMensaje();
 			}
 			else{
-				procesarResultado(j);
+				procesarResultado(myObj.reto[i].options[j-1]);
 				button_group.remove();
 				enviarResultado();
 			}
@@ -150,7 +150,7 @@ function enviarResultado(){
 }
 
 function procesarResultado(j){
-	var newStr = '{"id":' + myObj.reto[i].id + ',"respuesta":' + myObj.reto[i].options[j] + "}";
+	var newStr = '{"id":' + myObj.reto[i].id + ',"respuesta":' + '"' +j.toString() + '"' + '}';
 	objRes.respuestas.push(JSON.parse(newStr));
 }
 

@@ -82,9 +82,7 @@ def selecciona_textos(textos_etiquetados, textos_sin_etiquetar, num_textos, list
 
 @csrf_exempt
 def reto(request):
-
     requisitos = json.loads(request.body.decode())
-    print(requisitos)
     ppcc = requisitos['palabras_clave'].split(',')
     if requisitos['palabras_restringidas'] != '':
         pprr = requisitos['palabras_restringidas'].split(',')
