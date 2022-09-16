@@ -134,7 +134,7 @@ def comprobacion(request):
         valoracion = 'correcto'
         for resp in respuestas:
             textos_query = Textos.objects.get(id = resp['id'])
-            opcion_query = Opciones_texto.objects.get(texto = resp['id'], opcion = resp['a'])
+            opcion_query = Opciones_texto.objects.get(texto = resp['id'], opcion = resp['respuesta'])
             opcion_query.actualiza_cuenta()
             textos_query.actualiza_eleccion()
     else:
