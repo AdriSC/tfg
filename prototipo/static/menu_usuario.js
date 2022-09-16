@@ -89,39 +89,40 @@ function dibujarTablaColecciones(datos) {
 
 
 function dialogoColeccion(retos, id) {
+	
 	document.getElementsByClassName("modal-title")[0].innerText = "Colección #" + id;
 	
 	var tbodySi = document.getElementById("cuerpo_si");
 	for(let i = 0; i < retos.textos_etiquetados.length; i++) {
 		var fila = document.createElement("tr");
-		var texto = document.createElement("td");
+		var text = document.createElement("td");
 		var eleccion = document.createElement("td");
 		var fiabilidad = document.createElement("td");
-
-		texto.innerHTML = retos.textos_etiquetados[i].texto;
+		
+		text.innerHTML = retos.textos_etiquetados[i].texto;
 		eleccion.innerHTML = retos.textos_etiquetados[i].eleccion;
 		fiabilidad.innerHTML = retos.textos_etiquetados[i].fiabilidad;
 
-		fila.appendChild(texto);
+		fila.appendChild(text);
 		fila.appendChild(eleccion);
 		fila.appendChild(fiabilidad);
 		tbodySi.appendChild(fila);
 	}
 
-	var tbodySi = document.getElementById("cuerpo_no");
-	for(let i = 0; i < retos.textos_etiquetados.length; i++) {
+	var tbodyNo = document.getElementById("cuerpo_no");
+	for(let i = 0; i < retos.textos_sin_etiquetar.length; i++) {
 		var fila = document.createElement("tr");
-		var texto = document.createElement("td");
+		var text = document.createElement("td");
 		var fiabilidad = document.createElement("td");
 
-		texto.innerHTML = retos.textos_sin_etiquetar[i].texto;
+		text.innerHTML = retos.textos_sin_etiquetar[i].texto;
 		fiabilidad.innerHTML = retos.textos_sin_etiquetar[i].fiabilidad;
 
-		fila.appendChild(texto);
+		fila.appendChild(text);
 		fila.appendChild(fiabilidad);
-		tbodySi.appendChild(fila);
+		tbodyNo.appendChild(fila);
 	}
-
+	
 	const myModal = document.getElementById("ventana_dialogo");
 	const modal = new bootstrap.Modal(myModal);
 	modal.show();

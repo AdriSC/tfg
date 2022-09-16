@@ -8,6 +8,9 @@ class Coleccion(models.Model):
     descripcion = models.CharField(max_length=300)
     palabras_clave = models.CharField(max_length=300)
     
+    class Meta:
+        verbose_name_plural = "Colecciones"
+
     def __str__(self):
         return self.nombre
         
@@ -20,6 +23,9 @@ class Textos(models.Model):
     umbral_eleccion = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     fiabilidad_opcion = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     
+    class Meta:
+        verbose_name_plural = "Textos"
+
     def __str__(self):
         return self.texto
     

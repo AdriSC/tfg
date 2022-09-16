@@ -84,15 +84,13 @@ def ventana_usuario(request):
 
 def renovar_clave(request):
     clave = Clave_usuario.objects.get(usuario=request.session['_auth_user_id'])
-    print(clave.clave)
     clave.renueva_clave(generar_clave())
     return HttpResponseRedirect('ventana_usuario')
 
 def leer_documento_cargado(archivo):
-    with open('archivos/carga.txt', mode='wb+') as carga_doc:
+    with open('prototipo/archivos/carga.txt', mode='wb+') as carga_doc:
         for c in archivo:
             carga_doc.write(c)
-        print(carga_doc)
    
 def comprobar_datos(fila, opciones):
     if len(fila) != 3 or len(opciones) < 2:
@@ -101,15 +99,14 @@ def comprobar_datos(fila, opciones):
         return True
 
 def cargar_textos_bbdd():
-    with open('archivos/carga.txt') as doc_carga:
-        doc_rd = csv.reader(doc_carga)
+    with open('prototipo/archivos/carga.txt') as doc_carga:
+        doc_rd = csv.reader(doc_carga, delimiter=";")
         cabecera = next(doc_rd)
         ppcc = next(doc_rd)
         c = Coleccion(nombre=cabecera[0], descripcion=cabecera[1], palabras_clave=ppcc[0])
         c.save()
         for fila in doc_rd:
-            print(fila)
-            opciones = fila[1].strip('[]').split(';')
+            opciones = fila[1].strip('[]').split(',')
             if comprobar_datos(fila, opciones):
                 try:
                     r = Textos(texto=fila[0], coleccion=c, umbral_eleccion = float(fila[2]))
@@ -118,7 +115,7 @@ def cargar_textos_bbdd():
                     return False
                 
                 for op in opciones:
-                    o = Opciones_texto(reto=r, opcion=op)
+                    o = Opciones_texto(texto=r, opcion=op)
                     o.save()
             else: 
                 return False
@@ -177,8 +174,8 @@ def subir_textos(request):
         doc = request.FILES
         leer_documento_cargado(doc['archivocarga'])
         if cargar_textos_bbdd():
-            if os.path.exists("archivos/carga.txt"):
-                os.remove("archivos/carga.txt")
+            if os.path.exists("prototipo/archivos/carga.txt"):
+                os.remove("prototipo/archivos/carga.txt")
             return HttpResponse('ok')
         else:
             return HttpResponse('no ok')
@@ -206,7 +203,7 @@ def descargar_csv(request):
         headers={'Content-Disposition': 'attachment; filename="{}.csv"'.format(coleccion_qs.nombre)},
     )
 
-    doc_wr = csv.writer(csv_res)
+    doc_wr = csv.writer(csv_res, delimiter=';')
     doc_wr.writerow(info_coleccion)
     doc_wr.writerow(cabecera)
     doc_wr.writerows(filas)

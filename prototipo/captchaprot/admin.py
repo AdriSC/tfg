@@ -25,11 +25,14 @@ class ColeccionAdmin(admin.ModelAdmin):
 
     def upload_csv(self, request):
         if request.method == 'POST' and 'archivocarga' in request.FILES:
+            #print(request.POST['archivocarga'])
             doc = request.FILES
+            #leer_documento_cargado(request.POST['archivocarga'])
+            #leer_documento_cargado(request.FILES['archivocarga'])
             leer_documento_cargado(doc['archivocarga'])
             if cargar_textos_bbdd():
-                if os.path.exists("archivos/carga.txt"):
-                    os.remove("archivos/carga.txt")
+                if os.path.exists("prototipo/archivos/carga.txt"):
+                    os.remove("prototipo/archivos/carga.txt")
                 self.message_user(request, "El archivo CSV ha sido importado")
                 return HttpResponseRedirect(".")
             else:

@@ -2,8 +2,8 @@
 {% block content %}
 <form action="upload-csv" enctype="multipart/form-data" method="post">
     {% csrf_token %}
-    <input type="file" id="archivocarga" name="archivocarga">
-    <input type="submit">
+    <input type="file" id="archivocarga" name="archivocarga" accept=".txt"><br>
+    <input type="submit" value="Submit">
 </form>
 {{block.super}}
 {% endblock %}
